@@ -42,11 +42,18 @@ class RepresentationConfig:
 
 
 @dataclass
+class PCAConfig:
+    n_components: int = 64  # paper §3.2 / Fig. 1
+    fit_split: str = "all"  # all = published protocol; train = leakage-controlled variant
+
+
+@dataclass
 class Config:
     experiment: ExperimentConfig = field(default_factory=ExperimentConfig)
     dataset: DatasetConfig = field(default_factory=DatasetConfig)
     model: ModelConfig = field(default_factory=ModelConfig)
     representation: RepresentationConfig = field(default_factory=RepresentationConfig)
+    pca: PCAConfig = field(default_factory=PCAConfig)
 
 
 def _build(cls, data: dict | None):
@@ -66,4 +73,5 @@ def load_config(path: str | Path) -> Config:
         dataset=_build(DatasetConfig, raw.get("dataset")),
         model=_build(ModelConfig, raw.get("model")),
         representation=_build(RepresentationConfig, raw.get("representation")),
+        pca=_build(PCAConfig, raw.get("pca")),
     )

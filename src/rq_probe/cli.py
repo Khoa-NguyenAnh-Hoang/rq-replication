@@ -23,6 +23,12 @@ def main(argv: list[str] | None = None) -> int:
     p_ext.add_argument("--dtype", default=None)
     p_ext.add_argument("--fresh", action="store_true", help="ignore and delete any partial checkpoint")
 
+    p_pca = sub.add_parser("pca", help="per-layer PCA compression of an embedding artifact (CPU)")
+    p_pca.add_argument("-c", "--config", default="configs/experiment.yaml")
+    p_pca.add_argument("--embedding", default=None, help="source .pt (default: the configured extraction artifact)")
+    p_pca.add_argument("--fit-split", choices=["all", "train"], default=None)
+    p_pca.add_argument("--n-components", type=int, default=None)
+
     args = parser.parse_args(argv)
 
     if args.command == "validate":
@@ -52,6 +58,18 @@ def main(argv: list[str] | None = None) -> int:
         if args.dtype:
             cfg.model.dtype = args.dtype
         run_extraction(cfg, max_examples=args.max_examples, fresh=args.fresh)
+        return 0
+
+    if args.command == "pca":
+        from .config import load_config
+        from .pca_step import run_pca
+
+        run_pca(
+            load_config(args.config),
+            embedding_path=args.embedding,
+            fit_split=args.fit_split,
+            n_components=args.n_components,
+        )
         return 0
 
     return 2

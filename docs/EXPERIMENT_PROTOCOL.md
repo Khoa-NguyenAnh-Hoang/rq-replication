@@ -48,7 +48,7 @@ Paper §3.2 p.157. For each example, one forward pass with `output_hidden_states
 
 Paper §3.2 + App. A (p.166): k=64, per dataset×model×formulation, all probes in the same projected space per setting.
 
-- Implementation: sklearn `PCA(n_components=64)` per layer, float32, CPU (port of `pca_transform.py`).
+- Implementation: sklearn `PCA(n_components=64)` per layer, float32, CPU (port of `pca_transform.py`), with one deliberate engineering deviation: **`svd_solver="full"`** — sklearn's default auto-selects randomized SVD at this scale, which is nondeterministic without a fixed seed; the exact solver is deterministic, seed-free, and numerically equivalent up to SVD precision. Re-runs are bit-identical (unit-tested).
 - **Fit split — the known contradiction:** paper App. B p.166 says the PCA mean µ is "computed on the training split", but `pca_transform.py` fits PCA on **all N rows (train+dev+test together)**. We run BOTH:
   - `fit_split: all` — published protocol, primary results (documented as containing test-set information in the basis; implication assessed in the report);
   - `fit_split: train` — leakage-controlled variant, reported side-by-side. If AUROC deltas are ≪ CI width (App. A found <1 pp for full-space vs PCA-64), conclusions stand under both.

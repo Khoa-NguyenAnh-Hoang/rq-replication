@@ -20,3 +20,7 @@ representation:
   batch_size: 16          # confirm with the Colab pilot batch sweep
   max_length: 512
   shard_every: 500        # partial-checkpoint frequency (resume support)
+
+pca:
+  n_components: 64        # paper §3.2 / Fig. 1
+  fit_split: all          # 'all' = published protocol; 'train' = leakage-controlled variant

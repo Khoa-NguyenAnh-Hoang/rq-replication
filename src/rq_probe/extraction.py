@@ -215,6 +215,7 @@ def run_extraction(
             "embeddings": embeddings,
             "ids": list(range(n_total)),  # row i <-> id i by contract (data.py enforces it)
             "labels": dataset.labels if max_examples is None else dataset.labels[:max_examples],
+            "splits": dataset.splits if max_examples is None else dataset.splits[:max_examples],
             "meta": _meta(cfg, dataset.sha256, n_total, truncated, tuple(embeddings.shape)),
         },
         out_path,
