@@ -15,8 +15,8 @@ Planning complete (see `docs/`), implementation started — Phase 0 (environment
 
 | Phase | Scope | Status |
 |---|---|---|
-| 0 | Repo scaffolding, locked env, Colab smoke test | **in progress** |
-| 1–2 | Data layer + metrics (CPU) | pending |
+| 0 | Repo scaffolding, locked env, Colab smoke test | **done** (pin step pending one Colab T4 run) |
+| 1–2 | Data layer + metrics (CPU) | data layer **done**; metrics pending |
 | 3–6 | Extraction → PCA → probes → layer-wise AUROC (Tier 1) | pending |
 | 7–9 | Mean pooling + alignment (Tier 2), robustness, writing | pending |
 
