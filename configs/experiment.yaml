@@ -1,0 +1,22 @@
+# Experiment configuration — defaults audited from the upstream code and paper.
+# Every value traces to docs/EXPERIMENT_PROTOCOL.md; see docs/REPOSITORY_DESIGN.md §5.
+experiment:
+  name: rq_replication
+  seed: 42
+
+dataset:
+  name: RQ
+  file: data/raw/RQ.csv
+  text_column: question_with_context
+
+model:
+  checkpoint: Qwen/Qwen3-4B
+  revision: null          # pin the hash verified by scripts/colab_smoke_test.py --full
+  dtype: float16          # T4 has no bf16; upstream "auto" would load bf16 there
+  device: auto
+
+representation:
+  pooling: last_token     # second run: mean_token (attention-mask weighted)
+  batch_size: 16          # confirm with the Colab pilot batch sweep
+  max_length: 512
+  shard_every: 500        # partial-checkpoint frequency (resume support)

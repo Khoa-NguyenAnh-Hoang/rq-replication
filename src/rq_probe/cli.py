@@ -15,6 +15,14 @@ def main(argv: list[str] | None = None) -> int:
     p_val = sub.add_parser("validate", help="validate a dataset CSV and print statistics")
     p_val.add_argument("--file", default="data/raw/RQ.csv")
 
+    p_ext = sub.add_parser("extract", help="extract per-layer hidden-state representations (GPU)")
+    p_ext.add_argument("-c", "--config", default="configs/experiment.yaml")
+    p_ext.add_argument("--max-examples", type=int, default=None, help="pilot subset (first N ids)")
+    p_ext.add_argument("--batch-size", type=int, default=None)
+    p_ext.add_argument("--device", default=None)
+    p_ext.add_argument("--dtype", default=None)
+    p_ext.add_argument("--fresh", action="store_true", help="ignore and delete any partial checkpoint")
+
     args = parser.parse_args(argv)
 
     if args.command == "validate":
@@ -31,6 +39,21 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{split:<13}{c['total']:>7}{c['rhetorical']:>12}{c['informational']:>14}")
         print("all integrity checks passed")
         return 0
+
+    if args.command == "extract":
+        from .config import load_config
+        from .extraction import run_extraction
+
+        cfg = load_config(args.config)
+        if args.batch_size:
+            cfg.representation.batch_size = args.batch_size
+        if args.device:
+            cfg.model.device = args.device
+        if args.dtype:
+            cfg.model.dtype = args.dtype
+        run_extraction(cfg, max_examples=args.max_examples, fresh=args.fresh)
+        return 0
+
     return 2
 
 
