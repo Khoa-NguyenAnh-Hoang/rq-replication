@@ -1,0 +1,25 @@
+[project]
+name = "rq-replication"
+version = "0.1.0"
+description = "Partial replication of 'Rhetorical Questions in LLM Representations: A Linear Probing Study' (ACL 2026) — DS310 course project"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scikit-learn>=1.4",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+    "tqdm>=4.66",
+    "pyyaml>=6.0",
+    "torch>=2.4",
+    # Qwen3 architecture support landed in transformers 4.51
+    "transformers>=4.51",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+# Non-package for Phase 0: `uv sync` installs dependencies only.
+# Add [build-system] + src/rq_probe layout in Phase 1 when the CLI exists.

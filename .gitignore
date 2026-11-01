@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ipynb_checkpoints/
+.ruff_cache/
+
+# Experiment artifacts (large, regenerable) — see docs/REPOSITORY_DESIGN.md §6
+outputs/
+
+# ACL-copyrighted paper — do not redistribute
+2026.acl-long.5.pdf
+
+# Upstream-licensed dataset (no LICENSE file in rq-representation-probing) —
+# download from https://github.com/ruyi101/rq-representation-probing into data/raw/
+data/raw/
