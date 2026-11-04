@@ -30,6 +30,10 @@ Planning documents: [docs/MASTER_PLAN.md](docs/MASTER_PLAN.md) ·
 [REPRODUCTION_DECISIONS.md](docs/REPRODUCTION_DECISIONS.md) ·
 [COLAB_RUNBOOK.md](docs/COLAB_RUNBOOK.md)
 
+Colab: open [notebooks/colab_phase3_extraction.ipynb](notebooks/colab_phase3_extraction.ipynb)
+on a T4 runtime — it runs the whole Phase 3 (clone → locked env → verified data → smoke
+test → pilot → full extraction → artifact check → optional Drive save).
+
 ## Setup
 
 ```bash

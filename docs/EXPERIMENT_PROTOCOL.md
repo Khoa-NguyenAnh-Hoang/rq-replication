@@ -6,7 +6,7 @@ Scientific protocol for the reduced-scope replication. Paper refs: sections/page
 
 **RQ** (Zhuang & Riloff, ACL SRW 2020), distributed verbatim in the official repo (`data/RQ.csv`).
 
-Verified statistics (computed from the shipped CSV, 2026-11-01; sha256 `7ebcadb1669c3518b4d1fc55a937e848754a4c18e20c23546a2d999ec886fda6`, re-verified by `rq-probe validate` on every load):
+Verified statistics (computed from the shipped CSV, 2026-11-01; canonical sha256 `316ccc067eea564b96ea90ef23a09cc769efb922bddce1255c6d968ae7a75236` — the upstream git blob as served on Linux; a Windows checkout with autocrlf hashes differently while content stays identical, re-verified by `rq-probe validate` on every load):
 
 | Split | Rows | Rhetorical (1) | Informational (0) |
 |---|---|---|---|

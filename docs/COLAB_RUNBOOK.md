@@ -15,6 +15,13 @@ Windows, so pick one:
   (repo lives in the WSL filesystem, e.g. `~/rq-replication`).
 - **B (fallback): browser notebook.** A Colab notebook whose first cell clones the repo
   and runs the same commands — no CLI, fully supported, same result, manual UI clicks.
+- **C (no local setup at all): the all-in-one notebook** —
+  [notebooks/colab_phase3_extraction.ipynb](../notebooks/colab_phase3_extraction.ipynb):
+  clone + locked env + checksum-verified data + smoke test + pilot + full extraction +
+  artifact validation + optional Drive save, in 8 cells. Compatibility with Colab's
+  2026-09-16 image (Python 3.13.15, Ubuntu 24.04) is verified in its first cell.
+  This is the recommended path for one-off T4 sessions; the CLI (below) is nicer for
+  repeated/automated runs.
 
 The CLI consumes the same free-tier compute units as the browser UI (T4 is the free GPU;
 `--high-mem` and some accelerators need Colab Pro).
