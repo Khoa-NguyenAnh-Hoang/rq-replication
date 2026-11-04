@@ -18,7 +18,7 @@ Planning complete (see `docs/`), implementation started — Phase 0 (environment
 | 0 | Repo scaffolding, locked env, Colab smoke test | **done** (pin step pending one Colab T4 run) |
 | 1–2 | Data layer + metrics (CPU) | **done** |
 | 3 | Config + extraction pipeline (batched, resumable) | **done** (GPU runs pending) |
-| 4 | Per-layer PCA, both fit variants (`all`/`train`) | **done** (real run pending Phase 3 artifact) |
+| 4 | Per-layer PCA, both fit variants (`all`/`train`) | **done incl. real-data run** (App. A gate: evr ≤ 0.24% ≪ 1%) |
 | 4–6 | PCA → probes → layer-wise AUROC (Tier 1) | pending |
 | 7–9 | Mean pooling + alignment (Tier 2), robustness, writing | pending |
 

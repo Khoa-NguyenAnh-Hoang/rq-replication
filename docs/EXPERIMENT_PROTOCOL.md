@@ -52,6 +52,7 @@ Paper §3.2 + App. A (p.166): k=64, per dataset×model×formulation, all probes 
 - **Fit split — the known contradiction:** paper App. B p.166 says the PCA mean µ is "computed on the training split", but `pca_transform.py` fits PCA on **all N rows (train+dev+test together)**. We run BOTH:
   - `fit_split: all` — published protocol, primary results (documented as containing test-set information in the basis; implication assessed in the report);
   - `fit_split: train` — leakage-controlled variant, reported side-by-side. If AUROC deltas are ≪ CI width (App. A found <1 pp for full-space vs PCA-64), conclusions stand under both.
+- **First real-data run (2026-11-04, Qwen3-4B last-token artifact, 8-core CPU):** 64th-component explained variance min/median/max = **0.13% / 0.21% / 0.23%** across all 37 layers (both fit variants) — consistent with paper App. A (< 1%). The 64 PCs capture ~64% of total variance (median layer). All-vs-train mean divergence is small: relative ‖mean_all − mean_train‖ / ‖mean_all‖ median 0.84%, max 1.32%. The decisive comparison is probe AUROC under both fits (Phase 6).
 - Basis saved (components, means, explained_variance_ratio) for map-back; layer ℓ of the artifact uses layer ℓ of the basis only — no cross-layer or cross-basis mixing (unit-tested).
 
 ## 5. Probes
