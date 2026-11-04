@@ -25,7 +25,7 @@ Matches paper §3.1 p.156 ("4,997 instances, 2,332 rhetorical, 3,200/797/1,000")
 
 | | Primary | Fallback |
 |---|---|---|
-| Checkpoint | `Qwen/Qwen3-4B` | `Qwen/Qwen3-8B` (+ 8-bit loading) |
+| Checkpoint | `Qwen/Qwen3-4B` @ revision `1cfa9a7208912126459214e8b04321603b3df60c` (pinned 2026-11-04; stable since the 2026-11-01 audit) | `Qwen/Qwen3-8B` (+ 8-bit loading) |
 | Why | Official README's own example model; same family as paper's Qwen3-32B; ungated, Apache-2.0 | Exact paper appendix model (Figs. 13–15 report Qwen3-8B on RQ/last-token) |
 | Config (from HF config.json, 2026-11-01) | 36 layers, hidden 2,560, bf16 checkpoint | 36 layers, hidden 4,096 |
 | fp16 weights ≈ | 8.1 GB → fits T4-16G with activation headroom | 16.4 GB fp16 → does NOT fit; int8 ≈ 8.5 GB via bitsandbytes |

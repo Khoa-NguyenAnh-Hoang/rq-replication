@@ -11,7 +11,7 @@ dataset:
 
 model:
   checkpoint: Qwen/Qwen3-4B
-  revision: null          # pin the hash verified by scripts/colab_smoke_test.py --full
+  revision: 1cfa9a7208912126459214e8b04321603b3df60c  # verified stable 2026-11-01..04; printed by the Colab smoke test
   dtype: float16          # T4 has no bf16; upstream "auto" would load bf16 there
   device: auto
 
