@@ -40,9 +40,9 @@ Paper §3.2 p.157. For each example, one forward pass with `output_hidden_states
 - **last_token** (primary): hidden state of the final *valid* token. Upstream uses `h[0,-1,:]` — safe at batch=1 only. We batch, so per-example index = `attention_mask.sum(dim=1) − 1` (verified by test vs batch=1 reference).
 - **mean_token** (Tier 2): Σ h_t·m_t / Σ m_t with attention mask m (upstream mean over all tokens at batch=1 ≡ unmasked mean; identical there, ours correct when batched). Special tokens included, matching upstream tokenizer defaults.
 - Precision: fp16 weights, fp32 accumulation of saved embeddings; upstream saved bf16 and upcast later — we save fp32 directly (≈ 1.9 GB per artifact for Qwen3-4B: 4,997 × 37 × 2,560 × 4 B).
-- Truncation: `max_length=512` with statistics reported (upstream had none; RQ mean ≈ 39 tokens, tail expected tiny `[UNVERIFIED]` — pilot reports exact counts).
+- Truncation: `max_length=512` with statistics reported (upstream had none). Measured on the real run (2026-11-04): **0/4,997 rows truncated** — max_length is a no-op on RQ with the Qwen3 tokenizer.
 - Loop requirements (task §7): `model.eval()`, `torch.inference_mode()`, no grad, configurable batch/device/dtype, shard checkpoint every 500 examples + resume, progress log, ordering = CSV id order.
-- CPU vs GPU: extraction = GPU (T4, est. 30–60 min Qwen3-4B `[UNVERIFIED]`, pilot decides); PCA = CPU (sklearn, minutes); probes = CPU or GPU (seconds/layer); metrics = CPU.
+- CPU vs GPU: extraction = GPU — **measured on a free Colab T4 (2026-11-04)**: batch 16 fp16, 0.04–0.09 s/example, full 4,997-example run ≈ 5–7 min compute + ~8 GB model download once per runtime; peak VRAM not captured in that first run (est. < 9 GB; the extractor now self-reports). PCA = CPU (sklearn, minutes); probes = CPU; metrics = CPU.
 
 ## 4. PCA procedure
 

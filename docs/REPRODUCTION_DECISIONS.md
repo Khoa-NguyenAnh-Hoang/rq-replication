@@ -62,11 +62,12 @@ Every deviation from the original paper, with justification and its effect on wh
 
 **Framing rule for the report:** every headline sentence carries "at reduced scale (Qwen3-4B) on the RQ dataset"; the paper is cited for the full-scale claim it makes.
 
-## D9. Unresolved items to settle during implementation (recorded here when resolved)
+## D9. Items recorded as resolved (updated 2026-11-04 after the first full T4 run)
 
-1. Exact pinned versions (torch/transformers/sklearn/python) — M0/M3 Colab smoke test.
-2. Qwen3-4B HF revision pin — M3.
-3. Qwen3 tokenizer length stats + truncation rate — M3 pilot.
-4. lr sensitivity outcome → keep or widen D4 caveat — M5.
-5. Batch size final choice — M3 sweep.
-6. Whether Qwen3-4B tokenizer adds BOS/EOS by default (affects mean-pooling definition marginally; match upstream tokenizer defaults either way) — M3.
+1. **Versions** — resolved: the Colab run installs from the committed `uv.lock` (torch 2.15.0 CUDA, transformers 5.22.1, sklearn 1.9.1, Python 3.13.15); the lock is the pin, no separate `==` pins needed.
+2. **HF revision** — resolved: `1cfa9a7208912126459214e8b04321603b3df60c`, pinned in `configs/experiment.yaml`; verified unchanged 2026-11-01 → 2026-11-04 and embedded in the artifact metadata.
+3. **Tokenizer length stats / truncation** — resolved: **0/4,997 rows exceed max_length=512** (Qwen3 tokenizer; mean ≈ 24 tokens on the sample checked) — truncation is a no-op on RQ.
+4. **lr sensitivity** — still open, M5.
+5. **Batch size** — resolved: 16 on T4, 0.04–0.09 s/example (drift consistent with Colab host throttling), no OOM; full run ≈ 5–7 min compute.
+6. **BOS/EOS** — resolved: Qwen3 adds no special tokens by default; mean pooling matches upstream exactly.
+7. **Peak VRAM** — not captured in the first run (the notebook measured its own process instead of the extractor subprocess — fixed: the extractor now logs peak VRAM itself; est. < 9 GB from 8.1 GB weights + batch-16 activations).

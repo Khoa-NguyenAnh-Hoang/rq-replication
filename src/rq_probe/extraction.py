@@ -210,6 +210,9 @@ def run_extraction(
 
     embeddings = torch.cat([t for t in ([done_states] if done_states is not None else []) + new_states])
     assert embeddings.shape[0] == n_total
+    if device.type == "cuda":
+        # subprocess-safe VRAM report: the parent notebook process cannot see this
+        log(f"peak VRAM during extraction: {torch.cuda.max_memory_allocated() / 2**30:.1f} GB")
     torch.save(
         {
             "embeddings": embeddings,
