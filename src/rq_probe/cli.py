@@ -8,6 +8,13 @@ import sys
 from .data import DataValidationError, load_dataset
 
 
+def _layers_arg(text: str) -> list[int]:
+    try:
+        return [int(t) for t in text.split(",")]
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"expected comma-separated integers, got {text!r}")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="rq-probe", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -28,6 +35,20 @@ def main(argv: list[str] | None = None) -> int:
     p_pca.add_argument("--embedding", default=None, help="source .pt (default: the configured extraction artifact)")
     p_pca.add_argument("--fit-split", choices=["all", "train"], default=None)
     p_pca.add_argument("--n-components", type=int, default=None)
+
+    p_train = sub.add_parser("train", help="train per-layer probes on a PCA artifact (CPU)")
+    p_train.add_argument("-c", "--config", default="configs/experiment.yaml")
+    p_train.add_argument(
+        "--probe",
+        action="append",
+        choices=["diffmean", "logistic", "hinge"],
+        default=None,
+        help="repeatable; default: all probes in the config",
+    )
+    p_train.add_argument("--pca", default=None, help="source PCA artifact (default: the configured fit)")
+    p_train.add_argument("--fit-split", choices=["all", "train"], default=None, help="select PCA fit variant")
+    p_train.add_argument("--layers", type=_layers_arg, default=None, metavar="N[,N...]", help="layer indices (default: all)")
+    p_train.add_argument("--lr", type=float, default=None, help="override probe_hparams.lr")
 
     args = parser.parse_args(argv)
 
@@ -69,6 +90,20 @@ def main(argv: list[str] | None = None) -> int:
             embedding_path=args.embedding,
             fit_split=args.fit_split,
             n_components=args.n_components,
+        )
+        return 0
+
+    if args.command == "train":
+        from .config import load_config
+        from .probes.trainable import run_train
+
+        run_train(
+            load_config(args.config),
+            pca_path=args.pca,
+            fit_split=args.fit_split,
+            probes=args.probe,
+            layers=args.layers,
+            lr=args.lr,
         )
         return 0
 

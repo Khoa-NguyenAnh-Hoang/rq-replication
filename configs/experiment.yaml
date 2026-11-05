@@ -24,3 +24,12 @@ representation:
 pca:
   n_components: 64        # paper §3.2 / Fig. 1
   fit_split: all          # 'all' = published protocol; 'train' = leakage-controlled variant
+
+probes: [diffmean, logistic, hinge]
+probe_hparams:            # upstream train.py defaults (REPRODUCTION_DECISIONS D4)
+  lr: 0.1
+  weight_decay: 0.0
+  batch_size: 256
+  max_epochs: 1000
+  patience: 20
+  early_stopping_metric: dev_loss

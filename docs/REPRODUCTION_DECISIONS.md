@@ -67,7 +67,7 @@ Every deviation from the original paper, with justification and its effect on wh
 1. **Versions** — resolved: the Colab run installs from the committed `uv.lock` (torch 2.15.0 CUDA, transformers 5.22.1, sklearn 1.9.1, Python 3.13.15); the lock is the pin, no separate `==` pins needed.
 2. **HF revision** — resolved: `1cfa9a7208912126459214e8b04321603b3df60c`, pinned in `configs/experiment.yaml`; verified unchanged 2026-11-01 → 2026-11-04 and embedded in the artifact metadata.
 3. **Tokenizer length stats / truncation** — resolved: **0/4,997 rows exceed max_length=512** (Qwen3 tokenizer; mean ≈ 24 tokens on the sample checked) — truncation is a no-op on RQ.
-4. **lr sensitivity** — still open, M5.
+4. **lr sensitivity** — resolved (2026-11-05, Phase 5): logistic probe on one mid layer (18) in the fit-all PCA space, scored on validation — lr 0.1 → dev AUROC 0.889 (best epoch 4); lr 0.01 → 0.901 (epoch 70); lr 0.001 → 0.902 (epoch 490). Spread ≈ 1.3 pp: moderately insensitive, with the upstream default (0.1) weakest on dev. Per D4 the default is kept for primary results and the sensitivity is reported rather than a value re-picked on dev; the decisive comparison is test-split AUROC against Hanley–McNeil CI width in Phase 6.
 5. **Batch size** — resolved: 16 on T4, 0.04–0.09 s/example (drift consistent with Colab host throttling), no OOM; full run ≈ 5–7 min compute.
 6. **BOS/EOS** — resolved: Qwen3 adds no special tokens by default; mean pooling matches upstream exactly.
 7. **Peak VRAM** — not captured in the first run (the notebook measured its own process instead of the extractor subprocess — fixed: the extractor now logs peak VRAM itself; est. < 9 GB from 8.1 GB weights + batch-16 activations).

@@ -47,6 +47,21 @@ class PCAConfig:
     fit_split: str = "all"  # all = published protocol; train = leakage-controlled variant
 
 
+PROBE_NAMES = ("diffmean", "logistic", "hinge")
+
+
+@dataclass
+class ProbeHparamsConfig:
+    """Upstream train.py defaults (REPRODUCTION_DECISIONS D4)."""
+
+    lr: float = 0.1
+    weight_decay: float = 0.0
+    batch_size: int = 256
+    max_epochs: int = 1000
+    patience: int = 20
+    early_stopping_metric: str = "dev_loss"
+
+
 @dataclass
 class Config:
     experiment: ExperimentConfig = field(default_factory=ExperimentConfig)
@@ -54,6 +69,8 @@ class Config:
     model: ModelConfig = field(default_factory=ModelConfig)
     representation: RepresentationConfig = field(default_factory=RepresentationConfig)
     pca: PCAConfig = field(default_factory=PCAConfig)
+    probes: list[str] = field(default_factory=lambda: list(PROBE_NAMES))
+    probe_hparams: ProbeHparamsConfig = field(default_factory=ProbeHparamsConfig)
 
 
 def _build(cls, data: dict | None):
@@ -68,10 +85,18 @@ def _build(cls, data: dict | None):
 
 def load_config(path: str | Path) -> Config:
     raw = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
-    return Config(
+    cfg = Config(
         experiment=_build(ExperimentConfig, raw.get("experiment")),
         dataset=_build(DatasetConfig, raw.get("dataset")),
         model=_build(ModelConfig, raw.get("model")),
         representation=_build(RepresentationConfig, raw.get("representation")),
         pca=_build(PCAConfig, raw.get("pca")),
+        probe_hparams=_build(ProbeHparamsConfig, raw.get("probe_hparams")),
     )
+    probes = raw.get("probes")
+    if probes is not None:
+        unknown = set(probes) - set(PROBE_NAMES)
+        if unknown:
+            raise ValueError(f"unknown probes in config: {sorted(unknown)}")
+        cfg.probes = list(probes)
+    return cfg

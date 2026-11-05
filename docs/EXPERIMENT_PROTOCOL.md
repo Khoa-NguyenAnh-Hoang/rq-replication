@@ -68,7 +68,7 @@ Paper §3.3. All fit on **train split only** in PCA-64 space; hyperparameters fr
 - **Validation split:** used only for early stopping/model selection (upstream intent; broken upstream due to `dev` naming — fixed).
 - **Test split:** touched only by final evaluation; no threshold tuning on it (AUROC is threshold-free anyway).
 - Known upstream quirk kept deliberately: probes have **no bias term** although App. B's map-back math includes b — b≡0 upstream, bias-free scoring changes neither AUROC nor rankings (affine shift), and map-back reduces to `w_x = Wᵀw_z`, `b_x = −w_xᵀµ`. Documented, unit-tested.
-- lr sensitivity check (3 values × 1 layer) before the full sweep; recorded in REPRODUCTION_DECISIONS.
+- lr sensitivity check (3 values × 1 layer) before the full sweep; recorded in REPRODUCTION_DECISIONS. Measured (2026-11-05, logistic, layer 18, fit-all): dev AUROC 0.889 / 0.901 / 0.902 for lr 0.1 / 0.01 / 0.001 — spread ≈ 1.3 pp, moderately insensitive; upstream default kept.
 
 ## 6. Evaluation metrics
 
