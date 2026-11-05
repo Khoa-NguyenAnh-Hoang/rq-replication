@@ -18,6 +18,7 @@ resuming verifies a config fingerprint before continuing.
 
 from __future__ import annotations
 
+import os
 import platform
 import time
 from pathlib import Path
@@ -129,6 +130,7 @@ def run_extraction(
     fingerprint = {
         "model_checkpoint": cfg.model.checkpoint,
         "model_revision": cfg.model.revision,
+        "dtype": cfg.model.dtype,
         "pooling": cfg.representation.pooling,
         "max_length": cfg.representation.max_length,
         "dataset_sha256": dataset.sha256,
@@ -231,4 +233,7 @@ def run_extraction(
 
 def _save_partial(path: Path, fingerprint: dict, done: int, done_states, new_states) -> None:
     parts = [t for t in ([done_states] if done_states is not None else []) + new_states]
-    torch.save({"fingerprint": fingerprint, "done": done, "embeddings": torch.cat(parts)}, path)
+    # atomic write: a kill mid-save corrupts the .tmp, never the previous checkpoint
+    tmp = path.with_name(path.name + ".tmp")
+    torch.save({"fingerprint": fingerprint, "done": done, "embeddings": torch.cat(parts)}, tmp)
+    os.replace(tmp, path)

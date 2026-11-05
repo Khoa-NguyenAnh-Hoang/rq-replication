@@ -194,6 +194,47 @@ def test_fingerprint_mismatch_rejected(workspace, tiny_model):
         run_extraction(cfg2, tokenizer=tok, model=tiny_model, log=lambda *_: None)
 
 
+def test_fingerprint_rejects_dtype_change(workspace, tiny_model):
+    # dtype changes the numbers, so a resumed run must not mix precisions silently
+    tok = StubTokenizer()
+    cfg = make_cfg()  # dtype float32
+    run_extraction(cfg, tokenizer=tok, model=tiny_model, stop_after=2, log=lambda *_: None)
+    cfg2 = make_cfg()
+    cfg2.model.dtype = "bfloat16"
+    with pytest.raises(ExtractionError, match="different configuration"):
+        run_extraction(cfg2, tokenizer=tok, model=tiny_model, log=lambda *_: None)
+
+
+def test_crash_during_checkpoint_write_leaves_partial_intact(workspace, tiny_model, monkeypatch):
+    # a kill mid-save corrupts only the .tmp; the previous checkpoint stays usable
+    tok = StubTokenizer()
+    cfg = make_cfg(shard_every=2)
+
+    run_extraction(cfg, tokenizer=tok, model=tiny_model, stop_after=2, log=lambda *_: None)
+    partial = Path("outputs/embeddings/RQ_question_with_context_Qwen3-4B_last_token.partial.pt")
+    tmp = partial.with_name(partial.name + ".tmp")
+    good = partial.read_bytes()
+
+    real_save = torch.save
+
+    def dying_save(obj, f, *args, **kwargs):
+        Path(f).write_bytes(b"corrupted")
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(torch, "save", dying_save)
+    with pytest.raises(KeyboardInterrupt):
+        run_extraction(cfg, tokenizer=tok, model=tiny_model, log=lambda *_: None)
+    monkeypatch.setattr(torch, "save", real_save)
+
+    assert partial.read_bytes() == good  # checkpoint untouched by the failed write
+    assert not tmp.exists() or tmp.read_bytes() != good  # tmp absorbed the corruption
+
+    out = run_extraction(cfg, tokenizer=tok, model=tiny_model, log=lambda *_: None)
+    saved = torch.load(out, weights_only=False)
+    assert saved["embeddings"].shape[0] == 6  # resumed cleanly to completion
+    assert not partial.exists() and not tmp.exists()  # no litter after success
+
+
 def test_truncation_counted_in_metadata(workspace, tiny_model):
     tok = StubTokenizer()
     cfg = make_cfg(max_length=4)  # TEXTS with >4 words: rows 1, 2, 4, 5 -> 4 truncated
