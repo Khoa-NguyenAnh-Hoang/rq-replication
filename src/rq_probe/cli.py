@@ -50,6 +50,13 @@ def main(argv: list[str] | None = None) -> int:
     p_train.add_argument("--layers", type=_layers_arg, default=None, metavar="N[,N...]", help="layer indices (default: all)")
     p_train.add_argument("--lr", type=float, default=None, help="override probe_hparams.lr")
 
+    p_ev = sub.add_parser("evaluate", help="layer-wise test AUROC + Hanley–McNeil CIs (CPU)")
+    p_ev.add_argument("-c", "--config", default="configs/experiment.yaml")
+    p_ev.add_argument("--pca", default=None, help="source PCA artifact (default: the configured fit)")
+    p_ev.add_argument("--fit-split", choices=["all", "train"], default=None, help="select PCA fit variant")
+    p_ev.add_argument("--probe", action="append", choices=["diffmean", "logistic", "hinge"], default=None)
+    p_ev.add_argument("--negative-control", action="store_true", help="retrain logistic on shuffled train labels (expect ≈0.5)")
+
     args = parser.parse_args(argv)
 
     if args.command == "validate":
@@ -104,6 +111,19 @@ def main(argv: list[str] | None = None) -> int:
             probes=args.probe,
             layers=args.layers,
             lr=args.lr,
+        )
+        return 0
+
+    if args.command == "evaluate":
+        from .config import load_config
+        from .evaluate import run_evaluate
+
+        run_evaluate(
+            load_config(args.config),
+            pca_path=args.pca,
+            fit_split=args.fit_split,
+            probes=args.probe,
+            negative_control=args.negative_control,
         )
         return 0
 

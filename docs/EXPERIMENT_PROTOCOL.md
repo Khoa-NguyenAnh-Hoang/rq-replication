@@ -87,6 +87,10 @@ Paper §3.4. Split discipline: per-layer metrics on **test** split (paper §3.3:
 | Spearman | PCA-64 (within) / original (transfer) | raw projection scores | test |
 | Jaccard | PCA-64 (within) / original (transfer) | raw projection scores | test, top/bottom 20% |
 
+- **First real-data run (2026-11-07, fit-all + fit-train, test n=1,000): M6 gate passed.** Trained probes mid-layer (13–25) mean test AUROC **0.825** (logistic peak 0.867 [0.844, 0.890] @ L28; hinge peak 0.860), diffMean lower throughout (mid-layer 0.771, peak 0.799), early-layer signal present (L0 ≈ 0.63–0.64). The paper Fig. 1 col. 1 pattern is replicated qualitatively at 4B scale.
+- **Negative control** (shuffled train labels → logistic retrained per layer → untouched real test labels): AUROC min/mean/max = 0.292/0.556/0.693 — near chance, far below any trained probe. The small positive offset vs 0.5 has a known mechanism: early stopping selects on the *real* dev labels, so epoch choice favours noise directions aligned with true signal; a fully blind control would shuffle dev labels too (not run).
+- **PCA fit-split comparison:** fit-all vs fit-train test-AUROC deltas are ≤ 0.015 per (probe, layer) — immaterial, as predicted by paper App. A and D3.
+
 ## 7. Leakage checks (task §6.2)
 
 1. PCA fit split recorded in every artifact; both variants reported (§4).

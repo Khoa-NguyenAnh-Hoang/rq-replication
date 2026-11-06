@@ -20,7 +20,7 @@ Planning complete (see `docs/`), implementation started — Phase 0 (environment
 | 3 | Config + extraction pipeline (batched, resumable) | **done** (GPU runs pending) |
 | 4 | Per-layer PCA, both fit variants (`all`/`train`) | **done incl. real-data run** (App. A gate: evr ≤ 0.24% ≪ 1%) |
 | 5 | Probes: diffmean + logistic/hinge × 37 layers (vendored trainer, lr sensitivity recorded) | **done incl. real-data run** (dev AUROC ≈ 0.89 mid-layer; test eval = Phase 6) |
-| 6 | Layer-wise TEST evaluation → Tier 1 (AUROC + Hanley–McNeil CIs, Fig-1-style plot) | pending |
+| 6 | Layer-wise TEST evaluation → Tier 1 (AUROC + Hanley–McNeil CIs, Fig-1-style plot) | **done incl. real-data run** (M6 gate passed: trained probes ≈ 0.83 mid-layers, diffMean 0.77, shuffled-label control ≈ chance) |
 | 7–9 | Mean pooling + alignment (Tier 2), robustness, writing | pending |
 
 Planning documents: [docs/MASTER_PLAN.md](docs/MASTER_PLAN.md) ·
