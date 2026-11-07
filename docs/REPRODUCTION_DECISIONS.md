@@ -71,3 +71,4 @@ Every deviation from the original paper, with justification and its effect on wh
 5. **Batch size** — resolved: 16 on T4, 0.04–0.09 s/example (drift consistent with Colab host throttling), no OOM; full run ≈ 5–7 min compute.
 6. **BOS/EOS** — resolved: Qwen3 adds no special tokens by default; mean pooling matches upstream exactly.
 7. **Peak VRAM** — not captured in the first run (the notebook measured its own process instead of the extractor subprocess — fixed: the extractor now logs peak VRAM itself; est. < 9 GB from 8.1 GB weights + batch-16 activations).
+8. **Map-back sanity (REPOSITORY_DESIGN §7 open point)** — resolved (2026-11-07, Phase 7a): the App. B closed form (w_x = Cᵀw_z, b_x = −µ·w_x) reproduces PCA-space AUROC in original space exactly (max |Δ| = 0.00000 over 3 probes × 37 layers, real data).

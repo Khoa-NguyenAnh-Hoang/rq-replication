@@ -57,6 +57,12 @@ def main(argv: list[str] | None = None) -> int:
     p_ev.add_argument("--probe", action="append", choices=["diffmean", "logistic", "hinge"], default=None)
     p_ev.add_argument("--negative-control", action="store_true", help="retrain logistic on shuffled train labels (expect ≈0.5)")
 
+    p_an = sub.add_parser("analyze", help="probe alignment metrics + PCA map-back sanity (CPU)")
+    p_an.add_argument("-c", "--config", default="configs/experiment.yaml")
+    p_an.add_argument("--pca", default=None, help="source PCA artifact (default: the configured fit)")
+    p_an.add_argument("--fit-split", choices=["all", "train"], default=None, help="select PCA fit variant")
+    p_an.add_argument("--pair", action="append", default=None, metavar="A,B", help="probe pair (repeatable; default: all pairs)")
+
     args = parser.parse_args(argv)
 
     if args.command == "validate":
@@ -125,6 +131,14 @@ def main(argv: list[str] | None = None) -> int:
             probes=args.probe,
             negative_control=args.negative_control,
         )
+        return 0
+
+    if args.command == "analyze":
+        from .config import load_config
+        from .alignment import run_analyze
+
+        pairs = [tuple(t.strip() for t in p.split(",")) for p in args.pair] if args.pair else None
+        run_analyze(load_config(args.config), pca_path=args.pca, fit_split=args.fit_split, pairs=pairs)
         return 0
 
     return 2

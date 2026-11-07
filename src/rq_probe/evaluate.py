@@ -31,7 +31,7 @@ class EvaluateError(RuntimeError):
     pass
 
 
-def _resolve_pca(cfg: Config, pca_path: str | Path | None, fit_split: str | None) -> Path:
+def resolve_pca(cfg: Config, pca_path: str | Path | None, fit_split: str | None) -> Path:
     if pca_path is None:
         fs = fit_split or cfg.pca.fit_split
         from .pca_step import pca_artifact_paths
@@ -43,7 +43,7 @@ def _resolve_pca(cfg: Config, pca_path: str | Path | None, fit_split: str | None
     return pca_path
 
 
-def _split_masks(splits: list[str]) -> dict[str, torch.Tensor]:
+def split_masks(splits: list[str]) -> dict[str, torch.Tensor]:
     return {
         name: torch.tensor([s == name for s in splits])
         for name in ("train", "validation", "test")
@@ -145,7 +145,7 @@ def run_evaluate(
 ) -> Path:
     """Evaluate probe artifacts on the test split; returns the JSONL path."""
     probes = list(probes) if probes is not None else list(cfg.probes)
-    pca_path = _resolve_pca(cfg, pca_path, fit_split)
+    pca_path = resolve_pca(cfg, pca_path, fit_split)
 
     obj = torch.load(pca_path, map_location="cpu", weights_only=True)
     X = obj["embeddings"].float()
@@ -154,7 +154,7 @@ def run_evaluate(
         raise EvaluateError("source artifact ids violate the row-alignment contract (ids must be 0..N-1)")
     y = torch.tensor(obj["labels"], dtype=torch.long)
     splits = list(obj["splits"])
-    masks = _split_masks(splits)
+    masks = split_masks(splits)
     if masks["test"].sum() == 0:
         raise EvaluateError("test split is empty — nothing to evaluate")
 
