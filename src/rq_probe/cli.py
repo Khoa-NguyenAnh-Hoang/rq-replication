@@ -26,6 +26,7 @@ def main(argv: list[str] | None = None) -> int:
     p_ext.add_argument("-c", "--config", default="configs/experiment.yaml")
     p_ext.add_argument("--max-examples", type=int, default=None, help="pilot subset (first N ids)")
     p_ext.add_argument("--batch-size", type=int, default=None)
+    p_ext.add_argument("--pooling", choices=["last_token", "mean_token"], default=None)
     p_ext.add_argument("--device", default=None)
     p_ext.add_argument("--dtype", default=None)
     p_ext.add_argument("--fresh", action="store_true", help="ignore and delete any partial checkpoint")
@@ -87,6 +88,8 @@ def main(argv: list[str] | None = None) -> int:
         cfg = load_config(args.config)
         if args.batch_size:
             cfg.representation.batch_size = args.batch_size
+        if args.pooling:
+            cfg.representation.pooling = args.pooling
         if args.device:
             cfg.model.device = args.device
         if args.dtype:
