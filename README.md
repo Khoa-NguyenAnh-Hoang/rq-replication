@@ -22,7 +22,7 @@ Planning complete (see `docs/`), implementation started — Phase 0 (environment
 | 5 | Probes: diffmean + logistic/hinge × 37 layers (vendored trainer, lr sensitivity recorded) | **done incl. real-data run** (dev AUROC ≈ 0.89 mid-layer; test eval = Phase 6) |
 | 6 | Layer-wise TEST evaluation → Tier 1 (AUROC + Hanley–McNeil CIs, Fig-1-style plot) | **done incl. real-data run** (M6 gate passed: trained probes ≈ 0.83 mid-layers, diffMean 0.77, shuffled-label control ≈ chance) |
 | 7a | Alignment: cosine / Spearman / Jaccard between probes + map-back sanity (Tier 2, RQ3) | **done incl. real-data run** (cos logistic+hinge 0.92 ≫ diffMean pairs ≈ 0.52; top-Jaccard < bottom everywhere) |
-| 7b | Mean-token pooling: T4 extraction → PCA/probes/eval + mean-vs-last (Tier 2) | pending (**code ready**; needs one Colab T4 run) |
+| 7b | Mean-token pooling: T4 extraction → PCA/probes/eval + mean-vs-last (Tier 2) | **done incl. real-data run** (M7b gate passed: mean ≤ last everywhere — mid-layer Δ −0.18…−0.24; dissociation replicates) |
 | 8–9 | Robustness & error analysis; writing | pending |
 
 Planning documents: [docs/MASTER_PLAN.md](docs/MASTER_PLAN.md) ·
