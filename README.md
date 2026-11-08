@@ -23,7 +23,8 @@ Planning complete (see `docs/`), implementation started — Phase 0 (environment
 | 6 | Layer-wise TEST evaluation → Tier 1 (AUROC + Hanley–McNeil CIs, Fig-1-style plot) | **done incl. real-data run** (M6 gate passed: trained probes ≈ 0.83 mid-layers, diffMean 0.77, shuffled-label control ≈ chance) |
 | 7a | Alignment: cosine / Spearman / Jaccard between probes + map-back sanity (Tier 2, RQ3) | **done incl. real-data run** (cos logistic+hinge 0.92 ≫ diffMean pairs ≈ 0.52; top-Jaccard < bottom everywhere) |
 | 7b | Mean-token pooling: T4 extraction → PCA/probes/eval + mean-vs-last (Tier 2) | **done incl. real-data run** (M7b gate passed: mean ≤ last everywhere — mid-layer Δ −0.18…−0.24; dissociation replicates) |
-| 8–9 | Robustness & error analysis; writing | pending |
+| 8 | Robustness & error analysis (length proxy, error buckets, 3-seed stability) | **done incl. real-data run** (length ruled out: bucketed AUROC flat 0.84–0.89; seed-robust mid-layer band; single-layer seed noise flagged) |
+| 9 | Writing: report + slides from metrics JSONLs | pending |
 
 Planning documents: [docs/MASTER_PLAN.md](docs/MASTER_PLAN.md) ·
 [EXPERIMENT_PROTOCOL.md](docs/EXPERIMENT_PROTOCOL.md) ·

@@ -64,6 +64,13 @@ def main(argv: list[str] | None = None) -> int:
     p_an.add_argument("--fit-split", choices=["all", "train"], default=None, help="select PCA fit variant")
     p_an.add_argument("--pair", action="append", default=None, metavar="A,B", help="probe pair (repeatable; default: all pairs)")
 
+    p_rb = sub.add_parser("robustness", help="error analysis, length proxy, optional seed stability (CPU)")
+    p_rb.add_argument("-c", "--config", default="configs/experiment.yaml")
+    p_rb.add_argument("--pca", default=None, help="source PCA artifact (default: the configured fit)")
+    p_rb.add_argument("--fit-split", choices=["all", "train"], default=None, help="select PCA fit variant")
+    p_rb.add_argument("--layer", type=int, default=None, help="operating layer (default: best logistic layer from the evaluate JSONL)")
+    p_rb.add_argument("--seed-stability", action="store_true", help="retrain logistic/hinge under 3 seeds and report test-AUROC std")
+
     args = parser.parse_args(argv)
 
     if args.command == "validate":
@@ -142,6 +149,19 @@ def main(argv: list[str] | None = None) -> int:
 
         pairs = [tuple(t.strip() for t in p.split(",")) for p in args.pair] if args.pair else None
         run_analyze(load_config(args.config), pca_path=args.pca, fit_split=args.fit_split, pairs=pairs)
+        return 0
+
+    if args.command == "robustness":
+        from .config import load_config
+        from .error_analysis import run_robustness
+
+        run_robustness(
+            load_config(args.config),
+            pca_path=args.pca,
+            fit_split=args.fit_split,
+            layer=args.layer,
+            seed_stability=args.seed_stability,
+        )
         return 0
 
     return 2

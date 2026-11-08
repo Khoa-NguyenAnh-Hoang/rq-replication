@@ -84,6 +84,7 @@ uv run rq-probe pca        -c configs/experiment.yaml [--fit-split train]   # CP
 uv run rq-probe train      -c configs/experiment.yaml --probe diffmean|logistic|hinge
 uv run rq-probe evaluate   -c configs/experiment.yaml          # AUROC tables
 uv run rq-probe analyze    -c configs/experiment.yaml          # alignment metrics
+uv run rq-probe robustness -c configs/experiment.yaml [--seed-stability]  # errors, length proxy, seeds (Phase 8)
 uv run rq-probe figures    -c configs/experiment.yaml
 ```
 
