@@ -32,9 +32,12 @@ rq-replication/
 │   ├── alignment.py               # cosine/Spearman/Jaccard across probes; PCA map-back
 │   ├── plotting.py                # Fig-1/Fig-2 style plots
 │   └── cli.py                     # `rq-probe validate|extract|pca|train|evaluate|analyze`
-├── scripts/                       # thin argparse wrappers over cli.py (Colab entry points)
+├── scripts/                       # thin argparse wrappers over cli.py (Colab entry points);
+│                                  #   also make_report_assets.py (Phase 9 report asset generator)
 ├── tests/                         # pytest, CPU-only, synthetic fixtures
 ├── notebooks/                     # exploratory only; all paper logic lives in src/
+├── report/                        # report.md skeleton (Phase 9) + gitignored assets/
+│                                  #   regenerated via scripts/make_report_assets.py
 ├── outputs/                       # gitignored; layout §6
 │   ├── embeddings/ ├── pca/ ├── probes/ ├── metrics/ └── figures/
 ├── docs/                          # the six planning documents

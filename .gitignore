@@ -15,3 +15,6 @@ outputs/
 # Upstream-licensed dataset (no LICENSE file in rq-representation-probing) —
 # download from https://github.com/ruyi101/rq-representation-probing into data/raw/
 data/raw/
+
+# Generated report assets (regenerate: scripts/make_report_assets.py)
+report/assets/
